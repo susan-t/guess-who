@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Guess Who?</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    background: #f4f1e8;
+    color: #222;
+    display: flex;
+    justify-content: center;
+    padding: 15px 20px;
+    overflow: hidden;
+    }
+
+    .game {
+        width: 100%;
+        max-width: 1100px;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        }
+
+    h1 {
+        text-align: center;
+        font-size: 32px;
+        margin: 0 0 4px;
+        }
+
+    .instructions {
+        text-align: center;
+        margin: 0 0 8px;
+        color: #555;
+        font-size: 14px;
+        }
+
+    /* -----------------------------
+       GAME BOARD
+    ----------------------------- */
+
+    .board {
+  flex: 1;
+  min-height: 1;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  min-height: 20px;
+}
+
+    .character {
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+
+  border: 3px solid #333;
+  border-radius: 12px;
+
+  background: white;
+  overflow: hidden;
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+    .character:hover {
+      transform: translateY(-4px);
+    }
+
+    .character img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Overlay when character is eliminated */
+
+    .character.eliminated::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+    }
+
+    .character.eliminated::before {
+      content: "✕";
+      position: absolute;
+      z-index: 2;
+
+      top: 50%;
+      left: 50%;
+
+      transform: translate(-50%, -50%);
+
+      color: white;
+      font-size: 70px;
+      font-weight: bold;
+    }
+
+    /* -----------------------------
+       CONTROLS
+    ----------------------------- */
+
+    .controls {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 8px 0;
+        }
+
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 12px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .reset-button {
+      background: #333;
+      color: white;
+    }
+
+    .reset-button:hover {
+      background: #555;
+    }
+
+    .counter {
+  text-align: center;
+  margin-bottom: 8px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+    /* -----------------------------
+       RESPONSIVE
+    ----------------------------- */
+
+    @media (max-width: 900px) {
+      .board {
+        grid-template-columns: repeat(8, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .board {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+
+      h1 {
+        font-size: 32px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="game">
+
+    <h1>GUESS WHO?</h1>
+
+    <p class="instructions">
+      Click a character to eliminate them.
+    </p>
+
+    <div class="counter">
+      <span id="remaining">24</span> characters remaining
+    </div>
+
+    <div class="controls">
+      <button class="reset-button" id="resetButton">
+        Reset Game
+      </button>
+    </div>
+
+    <!--
+      ==========================================
+      24 CHARACTER SLOTS
+      ==========================================
+    -->
+
+    <div class="board" id="board">
+
+      <div class="character" data-number="1">
+        <img src="images/1.webp" alt="Person 1">
+      </div>
+
+      <div class="character" data-number="2">
+        <img src="images/2.webp" alt="Person 2">
+      </div>
+
+      <div class="character" data-number="3">
+        <img src="images/3.webp" alt="Person 3">
+      </div>
+
+      <div class="character" data-number="4">
+        <img src="images/4.webp" alt="Person 4">
+      </div>
+
+      <div class="character" data-number="5">
+        <img src="images/5.webp" alt="Person 5">
+      </div>
+
+      <div class="character" data-number="6">
+        <img src="images/6.webp" alt="Person 6">
+      </div>
+
+      <div class="character" data-number="7">
+        <img src="images/7.webp" alt="Person 7">
+      </div>
+
+      <div class="character" data-number="8">
+        <img src="images/8.webp" alt="Person 8">
+      </div>
+
+      <div class="character" data-number="9">
+        <img src="images/9.webp" alt="Person 9">
+      </div>
+
+      <div class="character" data-number="10">
+        <img src="images/10.webp" alt="Person 10">
+      </div>
+
+      <div class="character" data-number="11">
+        <img src="images/11.webp" alt="Person 11">
+      </div>
+
+      <div class="character" data-number="12">
+        <img src="images/12.webp" alt="Person 12">
+      </div>
+
+      <div class="character" data-number="13">
+        <img src="images/13.webp" alt="Person 13">
+      </div>
+
+      <div class="character" data-number="14">
+        <img src="images/14.webp" alt="Person 14">
+      </div>
+
+      <div class="character" data-number="15">
+        <img src="images/15.webp" alt="Person 15">
+      </div>
+
+      <div class="character" data-number="16">
+        <img src="images/16.webp" alt="Person 16">
+      </div>
+
+      <div class="character" data-number="17">
+        <img src="images/17.webp" alt="Person 17">
+      </div>
+
+      <div class="character" data-number="18">
+        <img src="images/18.webp" alt="Person 18">
+      </div>
+
+      <div class="character" data-number="19">
+        <img src="images/19.webp" alt="Person 19">
+      </div>
+
+      <div class="character" data-number="20">
+        <img src="images/20.webp" alt="Person 20">
+      </div>
+
+      <div class="character" data-number="21">
+        <img src="images/21.webp" alt="Person 21">
+      </div>
+
+      <div class="character" data-number="22">
+        <img src="images/22.webp" alt="Person 22">
+      </div>
+
+      <div class="character" data-number="23">
+        <img src="images/23.webp" alt="Person 23">
+      </div>
+
+      <div class="character" data-number="24">
+        <img src="images/24.webp" alt="Person 24">
+      </div>
+
+    </div>
+
+  </main>
+
+
+  <script>
+
+    // Get all character cards
+    const characters = document.querySelectorAll(".character");
+
+    const remainingText = document.getElementById("remaining");
+
+    const resetButton = document.getElementById("resetButton");
+
+
+    // ---------------------------------------
+    // ELIMINATE CHARACTER
+    // ---------------------------------------
+
+    characters.forEach(character => {
+
+      character.addEventListener("click", () => {
+
+        character.classList.toggle("eliminated");
+
+        updateCounter();
+
+      });
+
+    });
+
+
+    // ---------------------------------------
+    // UPDATE COUNTER
+    // ---------------------------------------
+
+    function updateCounter() {
+
+      const eliminated =
+        document.querySelectorAll(".character.eliminated").length;
+
+      const remaining = 24 - eliminated;
+
+      remainingText.textContent = remaining;
+
+    }
+
+
+    // ---------------------------------------
+    // RESET GAME
+    // ---------------------------------------
+
+    resetButton.addEventListener("click", () => {
+
+      characters.forEach(character => {
+
+        character.classList.remove("eliminated");
+
+      });
+
+      updateCounter();
+
+    });
+
+  </script>
+
+</body>
+</html>
