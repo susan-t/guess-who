@@ -1,0 +1,237 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Draw the Suspect</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: Arial, sans-serif;
+      background: #f7f5ef;
+      color: #292929;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    header a {
+      color: #347b43;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .suspect-panel,
+    .questions-panel {
+      background: white;
+      border: 2px solid #dedbd1;
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    .suspect-panel {
+      text-align: center;
+    }
+
+    .image-area {
+      height: 360px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 16px 0;
+      background: #f0eee7;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .image-area img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .placeholder {
+      color: #777;
+      font-size: 1rem;
+    }
+
+    button {
+      border: none;
+      border-radius: 10px;
+      padding: 14px 20px;
+      background: #347b43;
+      color: white;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #286435;
+    }
+
+    .questions-panel h2 {
+      margin-top: 0;
+    }
+
+    .question-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .question {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 14px;
+      border-radius: 10px;
+      background: #f7f5ef;
+      cursor: pointer;
+      line-height: 1.4;
+    }
+
+    .question input {
+      margin-top: 4px;
+      accent-color: #347b43;
+    }
+
+    .question:has(input:checked) {
+      background: #e3f0e4;
+    }
+
+    @media (max-width: 700px) {
+      body {
+        padding: 16px;
+      }
+
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .image-area {
+        height: 300px;
+      }
+
+      header {
+        gap: 12px;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Draw the Suspect</h1>
+    <a href="index.html">← Back to Guess Who</a>
+  </header>
+
+  <main class="layout">
+
+    <!-- LEFT COLUMN: RANDOM SUSPECT -->
+    <section class="suspect-panel">
+      <h2>Who's the suspect?</h2>
+      <p>Randomly draw a character to investigate.</p>
+
+      <div class="image-area" id="imageArea">
+        <span class="placeholder">Your suspect will appear here...</span>
+      </div>
+
+      <p id="suspectLabel">No suspect selected</p>
+
+      <button id="randomizeButton">
+        Randomize Suspect
+      </button>
+    </section>
+
+    <!-- RIGHT COLUMN: QUESTION STARTERS -->
+    <section class="questions-panel">
+      <h2>Tips and things to avoid</h2>
+      <p>Check the descriptions that fit your suspect.</p>
+
+      <div class="question-list">
+        <label class="question">
+          <input type="checkbox">
+          Do: describe the suspect's appearance and personality.
+        </label>
+
+        <label class="question">
+          <input type="checkbox">
+          Dont: be too obvious for ex: cat that is asian
+        </label>
+
+        <label class="question">
+          <input type="checkbox">
+          Do: just be funny and creative
+        </label>
+
+
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    const randomizeButton =
+      document.getElementById("randomizeButton");
+
+    const imageArea =
+      document.getElementById("imageArea");
+
+    const suspectLabel =
+      document.getElementById("suspectLabel");
+
+    randomizeButton.addEventListener("click", function () {
+      // Choose a random image from person1.jpg to person24.jpg
+      const randomNumber = Math.floor(Math.random() * 22) + 1;
+
+      const image = document.createElement("img");
+      image.src = `images2/${randomNumber}.webp`;
+      image.alt = `Suspect ${randomNumber}`;
+
+      image.onerror = function () {
+        imageArea.innerHTML =
+          '<span class="placeholder">Could not load this image.</span>';
+        suspectLabel.textContent = "Check your image filenames.";
+      };
+
+      imageArea.innerHTML = "";
+      imageArea.appendChild(image);
+
+      suspectLabel.textContent = `Suspect #${randomNumber}`;
+
+      // Clear checked questions for the new suspect
+      document.querySelectorAll(
+        '.question input[type="checkbox"]'
+      ).forEach(function (checkbox) {
+        checkbox.checked = false;
+      });
+    });
+  </script>
+</body>
+</html>
